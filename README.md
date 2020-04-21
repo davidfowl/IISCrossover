@@ -44,8 +44,8 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 ## Limitations
 
-- When using inprocess mode: 
+- When using **inprocess** mode: 
   - It is likely that .NET Framework and .NET Core will run OK together (though this isn't officially supported).
   - Diagnostics are also likely hosed (debugging, etw)
   - It isn't possible to run multiple applications in same app pool (in process mode).
-- No obvious way (that I have found yet) to pass state between ASP.NET and ASP.NET Core.
+  - Communcation between runtimes works if you use COM or any other interop technologies.
