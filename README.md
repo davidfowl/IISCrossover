@@ -41,6 +41,9 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 1. Setting the handler to null allows the next module to run in the pipeline and it will execute the ASP.NET Core module.
 
 ## Limitations
-- When using inprocess mode, It is likely that .NET Framework and .NET Core will run OK together (though this isn't officially supported). We also do not support multiple .NET Cores side by side in process.
-- Diagnostics are also likely hosed (debugging, etw)
-- It isn't possible to run multiple applications in same app pool (in process mode).
+
+- When using inprocess mode: 
+  - It is likely that .NET Framework and .NET Core will run OK together (though this isn't officially supported).
+  - Diagnostics are also likely hosed (debugging, etw)
+  - It isn't possible to run multiple applications in same app pool (in process mode).
+- No obvious way (that I have found yet) to pass state between ASP.NET and ASP.NET Core.
