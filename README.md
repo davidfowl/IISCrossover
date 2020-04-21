@@ -30,7 +30,7 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
             <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
             <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
         </handlers>
-        <aspNetCore processPath="dotnet" arguments="bin\Greenfield\Greenfield.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="inprocess" />
+        <aspNetCore processPath="dotnet" arguments="bin\Greenfield\Greenfield.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="outofprocess" />
     </system.webServer>
     ```
 
