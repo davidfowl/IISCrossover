@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,6 +14,13 @@ namespace LegacyApi.Controllers
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
+        }
+
+        [HttpGet]
+        [Route("api/values/pid")]
+        public int GetPid()
+        {
+            return Process.GetCurrentProcess().Id;
         }
 
         // GET api/values/5
