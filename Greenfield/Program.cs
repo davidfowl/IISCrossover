@@ -23,6 +23,5 @@ namespace Greenfield
                 {
                     webBuilder.UseStartup<Startup>();
                 });
-                //.UseContentRoot(@"C:\Users\david\source\repos\MyProduct\Greenfield");
     }
 }
