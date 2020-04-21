@@ -19,7 +19,7 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 ### How it works
 
-1. The ASP.NET Core module is a regular IIS module. It can be installed into an IIS based project. The
+1. The ASP.NET Core module is a regular IIS module. It can be installed into an IIS based project:
 
     ```xml
     <system.webServer>
@@ -39,6 +39,8 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 1. In [Global.asax.cs](LegacyApi/Global.asax.cs#L21-L34) we're using `Application_PostResolveRequestCache` which runs after the routing module and we use the URL to determine if we want to route to ASP.NET Core via [Context.RemapHandler](https://docs.microsoft.com/en-us/dotnet/api/system.web.httpcontext.remaphandler?view=netframework-4.8#System_Web_HttpContext_RemapHandler_System_Web_IHttpHandler_).
 1. Setting the handler to null allows the next module to run in the pipeline and it will execute the ASP.NET Core module.
+
+**NOTE: The hostingModel can be either inprocess or outofprocess. Either works. See below for the list of limiations for each mode.**
 
 ## Limitations
 
