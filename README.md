@@ -49,3 +49,4 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
   - Diagnostics are also likely hosed (debugging, etw)
   - It isn't possible to run multiple applications in same app pool (in process mode).
   - Communcation between runtimes works if you use COM or any other interop technologies.
+  - Native dlls that have the same name can conflict within the same process.
