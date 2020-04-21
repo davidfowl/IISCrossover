@@ -1,4 +1,4 @@
-## Running ASP.NET and ASP.NET Core in the same process
+## Running ASP.NET and ASP.NET Core in the same IIS pipeline
 
 This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the IIS pipeline (it can be in process or out of process). The idea is to experiment with ways to use any custom logic to determine which routes go to ASP.NET Core and which ones go to ASP.NET.
 
