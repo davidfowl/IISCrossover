@@ -49,10 +49,11 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 - When using **inprocess** mode: 
   - It is likely that .NET Framework and .NET Core will run OK together (though this isn't officially supported).
-  - Diagnostics are also likely hosed (debugging, etw)
+  - Some diagnostics are also likely hosed (dumps, debugging, etw etc.)
   - It isn't possible to run multiple applications in same app pool (in process mode).
   - Communcation between runtimes works if you use COM or any other interop technologies.
   - Native dlls that have the same name can conflict within the same process.
+  - There are 2 separate CLRs in the process that don't know about each other running ServerGC.
 
 ## Benefits
 - Managed and Native IIS modules run for both ASP.NET and ASP.NET Core applications
