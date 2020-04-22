@@ -43,7 +43,9 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 **NOTE: The hostingModel can be either inprocess or outofprocess. Either works. See below for the list of limiations for each mode.**
 
 ## Diagram
-![Architecture Diagram](diagram.svg)
+<p align="center">
+    <img src="diagram.svg" />
+</p>
 
 ## Limitations
 
