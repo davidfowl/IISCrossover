@@ -4,18 +4,12 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 ### Instructions
 
-1. First publish the application.
-
-    ```
-    dotnet publish .\Greenfield\ -o .\LegacyApi\bin\Greenfield
-    ```
-
-    This will publish the ASP.NET Core application in the bin folder of the ASP.NET MVC application. This is required because the ASP.NET Core IIS module is being configured to look at a relative path under the LegacyApi\bin. See the [web.config](LegacyApi/Web.config#L25) in the LegacyApi for this wire up.
-
 1. Make sure IIS is running in 64 bit more for ASP.NET.
 
     ![image](https://user-images.githubusercontent.com/95136/79828724-2df9e780-8356-11ea-9890-7e478c87b86d.png)
 
+1. Mark LegacyApi as the startup project and run the application.
+1. Navigating to /api/weather/* will take you to the ASP.NET Core application, and all other URLs go to the ASP.NET application.
 
 ### How it works
 
