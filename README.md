@@ -42,6 +42,9 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
 **NOTE: The hostingModel can be either inprocess or outofprocess. Either works. See below for the list of limiations for each mode.**
 
+## Diagram
+![Architecture Diagram](diagram.svg)
+
 ## Limitations
 
 - When using **inprocess** mode: 
@@ -50,3 +53,8 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
   - It isn't possible to run multiple applications in same app pool (in process mode).
   - Communcation between runtimes works if you use COM or any other interop technologies.
   - Native dlls that have the same name can conflict within the same process.
+
+## Benefits
+- Managed and Native IIS modules run for both ASP.NET and ASP.NET Core applications
+- Deployment process can pretty much stay the same (as long as you add the ASP.NET Core application as a payload within the ASP.NET application)
+- Allows routing to ASP.NET Core based on arbitrary application logic.
