@@ -21,8 +21,7 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
             <remove name="ExtensionlessUrlHandler-Integrated-4.0" />
             <remove name="OPTIONSVerbHandler" />
             <remove name="TRACEVerbHandler" />
-            <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" preCondition="integratedMode,runtimeVersionv4.0" />
-            <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+            <add name="ExtensionlessUrlHandler-Integrated-4.0" path="*." verb="*" type="System.Web.Handlers.TransferRequestHandler" modules="AspNetCoreModuleV2" preCondition="integratedMode,runtimeVersionv4.0" />
         </handlers>
         <aspNetCore processPath="dotnet" arguments="bin\Greenfield\Greenfield.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="outofprocess" />
     </system.webServer>
