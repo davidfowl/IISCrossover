@@ -10,7 +10,9 @@ namespace LegacyApi.Controllers
         {
             var data = new[] {
                 new Link{ Framework = "ASP.NET WebAPI", Url = HttpContext.Request.Url + "api/values" },
-                new Link{ Framework = "ASP.NET Core", Url = HttpContext.Request.Url + "api/weather" }
+                new Link{ Framework = "ASP.NET Core", Url = HttpContext.Request.Url + "api/weather" },
+                new Link{ Framework = "ASP.NET Core WebForm Page (redirected)", Url = HttpContext.Request.Url + "WebForm1.aspx" },
+                new Link{ Framework = "ASP.NET WebForm Page", Url = HttpContext.Request.Url + "WebForm2.aspx" }
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
