@@ -11,6 +11,6 @@
         <div>
         </div>
     </form>
-    <h1>This is another webform</h1>
+    <h1>This is another legacy webform</h1>
 </body>
 </html>
