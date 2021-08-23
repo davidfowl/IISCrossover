@@ -45,7 +45,7 @@ namespace LegacyApi
         {
             public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
             {
-                return httpContext.Request.Path.EndsWith(".aspx");
+                return httpContext.Request.Path.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase);
             }
         }
     }
