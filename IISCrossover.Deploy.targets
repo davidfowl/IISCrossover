@@ -1,0 +1,75 @@
+<Project>
+  <ItemGroup>
+    <ProjectReference Include="@(DeployProjectReference)">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>_DeployedProjectOutput</OutputItemType>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <DeployName>$([System.IO.Path]::GetFileNameWithoutExtension(%(Identity)))</DeployName>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <_DeployedProjectOutput Update="@(_DeployedProjectOutput)">
+        <TargetPath>projects\%(_DeployedProjectOutput.DeployName)\$([System.IO.Path]::GetFileName('%(Identity)'))</TargetPath>
+      </_DeployedProjectOutput>
+    </ItemGroup>
+
+    <MSBuild
+        Projects="@(_MSBuildProjectReferenceExistent)"
+        Targets="PublishItemsOutputGroup"
+        BuildInParallel="$(BuildInParallel)"
+        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform); %(_MSBuildProjectReferenceExistent.SetTargetFramework)"
+        Condition="'%(_MSBuildProjectReferenceExistent.DeployName)' != '' "
+        ContinueOnError="$(ContinueOnError)"
+        SkipNonexistentTargets="true"
+        RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_DeployedProjectsContents"/>
+    </MSBuild>
+
+    <ItemGroup>
+      <_AllDeployedProjectFilesContent Include="@(_DeployedProjectsContents)">
+        <TargetPath>projects\%(_DeployedProjectsContents.DeployName)\%(_DeployedProjectsContents.TargetPath)</TargetPath>
+      </_AllDeployedProjectFilesContent>
+      <_AllDeployedProjectFilesContent Include="@(_DeployedProjectOutput)" />
+      <Content Include="@(_AllDeployedProjectFilesContent)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddDeployedProjectsToWebConfig" AfterTargets="AssignDeployedProjectTargetPaths">
+    <PropertyGroup>
+      <__DeployedProjectTransformPath>$(IntermediateOutputPath)deployed_transform.xml</__DeployedProjectTransformPath>
+      <__WebConfigPath>web.config</__WebConfigPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <_DeployProjectPaths Include="$(OutDir)%(_DeployedProjectOutput.TargetPath)">
+        <HostingModel>%(_DeployedProjectOutput.HostingModel)</HostingModel>
+      </_DeployProjectPaths>
+      <_DeployProjectPaths Update="@(_DeployedProjectOutput)" Condition=" '%(HostingModel)' == '' ">
+        <HostingModel>outofprocess</HostingModel>
+      </_DeployProjectPaths>
+    </ItemGroup>
+
+    <Error Text="Unknown hosting model: %(_DeployProjectPaths.HostingModel)" Condition=" '%(_DeployProjectPaths.HostingModel)' != 'outofprocess' AND '%(_DeployProjectPaths.HostingModel)' != 'inprocess' " />
+
+    <ItemGroup>
+      <__DeployedProjectTransformLines Include='&lt;configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"&gt;' />
+      <__DeployedProjectTransformLines Include="&lt;system.webServer&gt;" />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore arguments="%(_DeployProjectPaths.Identity)" xdt:Transform="InsertIfMissing" xdt:locator="Match(arguments)" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Replace" xdt:locator="Match(arguments)" /&gt;' />
+      <__DeployedProjectTransformLines Include="&lt;/system.webServer&gt;" />
+      <__DeployedProjectTransformLines Include="&lt;/configuration&gt;" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(__DeployedProjectTransformPath)" Lines="@(__DeployedProjectTransformLines)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+    <TransformXml Source="$(__WebConfigPath)" Transform="$(__DeployedProjectTransformPath)" Destination="$(__WebConfigPath)" />
+  </Target>
+
+</Project>

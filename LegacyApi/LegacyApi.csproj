@@ -44,6 +44,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <DeployProjectReference Include="../Greenfield/Greenfield.csproj" HostingModel="outofprocess" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -177,6 +180,8 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+
+  <Import Project="../IISCrossover.Deploy.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
