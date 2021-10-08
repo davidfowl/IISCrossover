@@ -30,6 +30,9 @@ namespace LegacyApi
                 Context.Request.Path.StartsWith("/WebForm1.aspx", StringComparison.OrdinalIgnoreCase) ||
                 Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
             {
+                // Set a server variable pass state to the ASP.NET Core module
+                Context.Request.ServerVariables["FromFramework"] = "ASP.NET";
+
                 Context.RemapHandler(null);
             }
         }
