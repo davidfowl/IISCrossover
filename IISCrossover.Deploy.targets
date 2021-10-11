@@ -76,7 +76,7 @@
         <ContentRoot>%(TargetDirectory)</ContentRoot>
       </_DeployProjectPaths>
       <_DeployProjectPaths Update="@(_DeployedProjectOutput)" Condition=" '%(HostingModel)' == '' ">
-        <HostingModel>outofprocess</HostingModel>
+        <HostingModel>inprocess</HostingModel>
       </_DeployProjectPaths>
     </ItemGroup>
 
