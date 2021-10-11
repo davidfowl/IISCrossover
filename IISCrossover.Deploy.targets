@@ -12,20 +12,23 @@
 
   <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
+      <ItemGroup>
+        <_MSBuildDeployProjectReferenceExistent Include="@(_MSBuildDeployProjectReferenceExistent)" Condition=" '%(_MSBuildDeployProjectReferenceExistent.DeployName)' != '' " />
+      </ItemGroup>
       <_DeployedProjectOutput Update="@(_DeployedProjectOutput)">
         <TargetPath>projects\%(_DeployedProjectOutput.DeployName)\$([System.IO.Path]::GetFileName('%(Identity)'))</TargetPath>
       </_DeployedProjectOutput>
     </ItemGroup>
 
     <MSBuild
-        Projects="@(_MSBuildProjectReferenceExistent)"
+        Projects="@(_MSBuildDeployProjectReferenceExistent)"
         Targets="PublishItemsOutputGroup"
         BuildInParallel="$(BuildInParallel)"
-        Properties="%(_MSBuildProjectReferenceExistent.SetConfiguration); %(_MSBuildProjectReferenceExistent.SetPlatform); %(_MSBuildProjectReferenceExistent.SetTargetFramework)"
-        Condition="'%(_MSBuildProjectReferenceExistent.DeployName)' != '' "
+        Properties="%(_MSBuildDeployProjectReferenceExistent.SetConfiguration); %(_MSBuildDeployProjectReferenceExistent.SetPlatform); %(_MSBuildDeployProjectReferenceExistent.SetTargetFramework)"
+        Condition="'%(_MSBuildDeployProjectReferenceExistent.DeployName)' != '' "
         ContinueOnError="$(ContinueOnError)"
         SkipNonexistentTargets="true"
-        RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)">
+        RemoveProperties="%(_MSBuildDeployProjectReferenceExistent.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)">
 
       <Output TaskParameter="TargetOutputs" ItemName="_DeployedProjectsContents"/>
     </MSBuild>
