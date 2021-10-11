@@ -10,11 +10,21 @@
     </ProjectReference>
   </ItemGroup>
 
+  <Target Name="VerifyOnlyOneDeployedProject" BeforeTargets="AssignDeployedProjectTargetPaths">
+    <PropertyGroup>
+      <_IsInvalidValidDeployProjects>false</_IsInvalidValidDeployProjects>
+      <_HasDeployProject>true</_HasDeployProject>
+      <_HasDeployProject Condition=" '@(DeployProjectReference->Count())' == '0' " >false</_HasDeployProject>
+      <_HasOneDeployProject>false</_HasOneDeployProject>
+      <_HasOneDeployProject Condition=" '@(DeployProjectReference->Count())' == '1' " >true</_HasOneDeployProject>
+      <_IsInvalidValidDeployProjects Condition="!$(_HasDeployProject) AND !$(_HasOneDeployProject)">true</_IsInvalidValidDeployProjects>
+    </PropertyGroup>
+
+    <Error Condition="$(_IsInvalidValidDeployProjects)" Text="Only a single DeployProjectReference node is allowed per project" />
+  </Target>
+
   <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
-      <ItemGroup>
-        <_MSBuildDeployProjectReferenceExistent Include="@(_MSBuildDeployProjectReferenceExistent)" Condition=" '%(_MSBuildDeployProjectReferenceExistent.DeployName)' != '' " />
-      </ItemGroup>
       <_DeployedProjectOutput Update="@(_DeployedProjectOutput)">
         <TargetPath>projects\%(_DeployedProjectOutput.DeployName)\$([System.IO.Path]::GetFileName('%(Identity)'))</TargetPath>
       </_DeployedProjectOutput>
@@ -49,7 +59,7 @@
       <__DeployedProjectTransformPath>$(IntermediateOutputPath)deployed_transform.xml</__DeployedProjectTransformPath>
       <__WebConfigPath>web.config</__WebConfigPath>
     </PropertyGroup>
-    
+
     <ItemGroup>
       <_DeployProjectPaths Include="$(OutDir)%(_DeployedProjectOutput.TargetPath)">
         <HostingModel>%(_DeployedProjectOutput.HostingModel)</HostingModel>
@@ -64,8 +74,10 @@
     <ItemGroup>
       <__DeployedProjectTransformLines Include='&lt;configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"&gt;' />
       <__DeployedProjectTransformLines Include="&lt;system.webServer&gt;" />
-      <__DeployedProjectTransformLines Include='&lt;aspNetCore arguments="%(_DeployProjectPaths.Identity)" xdt:Transform="InsertIfMissing" xdt:locator="Match(arguments)" /&gt;' />
-      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Replace" xdt:locator="Match(arguments)" /&gt;' />
+      <!-- In order to remove, we must have a node. So, we'll add one if it's not there and then remove it. If there were 'RemoveIfExists' we could just use that -->
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="InsertIfMissing" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="Remove" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Insert" /&gt;' />
       <__DeployedProjectTransformLines Include="&lt;/system.webServer&gt;" />
       <__DeployedProjectTransformLines Include="&lt;/configuration&gt;" />
     </ItemGroup>
