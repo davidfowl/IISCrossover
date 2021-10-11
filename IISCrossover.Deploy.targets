@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <DisableFastUpToDateCheck Condition="'$(BuildingInsideVisualStudio)' == 'true' ">true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="@(DeployProjectReference)">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
@@ -23,7 +27,7 @@
     <Error Condition="$(_IsInvalidValidDeployProjects)" Text="Only a single DeployProjectReference node is allowed per project" />
   </Target>
 
-  <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AssignTargetPaths">
+  <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AddDeployedProjectsToWebConfig">
     <ItemGroup>
       <_DeployedProjectOutput Update="@(_DeployedProjectOutput)">
         <TargetPath>projects\%(_DeployedProjectOutput.DeployName)\$([System.IO.Path]::GetFileName('%(Identity)'))</TargetPath>
@@ -54,15 +58,22 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="AddDeployedProjectsToWebConfig" AfterTargets="AssignDeployedProjectTargetPaths">
+  <Target Name="PrepareDeployProjectPaths" BeforeTargets="AddDeployedProjectsToWebConfig">
     <PropertyGroup>
       <__DeployedProjectTransformPath>$(IntermediateOutputPath)deployed_transform.xml</__DeployedProjectTransformPath>
       <__WebConfigPath>web.config</__WebConfigPath>
+      <__IsPublishing>false</__IsPublishing>
+      <__IsPublishing Condition=" '$(PublishProfile)' != '' ">true</__IsPublishing>
     </PropertyGroup>
 
     <ItemGroup>
       <_DeployProjectPaths Include="$(OutDir)%(_DeployedProjectOutput.TargetPath)">
         <HostingModel>%(_DeployedProjectOutput.HostingModel)</HostingModel>
+        <ContentRoot>$([System.IO.Path]::GetDirectoryName(%(_DeployedProjectOutput.OriginalItemSpec)))</ContentRoot>
+        <TargetDirectory>$([System.IO.Path]::GetDirectoryName(%(_DeployedProjectOutput.TargetPath)))</TargetDirectory>
+      </_DeployProjectPaths>
+      <_DeployProjectPaths Condition="$(__IsPublishing)" Update="@(_DeployProjectPaths)">
+        <ContentRoot>%(TargetDirectory)</ContentRoot>
       </_DeployProjectPaths>
       <_DeployProjectPaths Update="@(_DeployedProjectOutput)" Condition=" '%(HostingModel)' == '' ">
         <HostingModel>outofprocess</HostingModel>
@@ -70,14 +81,16 @@
     </ItemGroup>
 
     <Error Text="Unknown hosting model: %(_DeployProjectPaths.HostingModel)" Condition=" '%(_DeployProjectPaths.HostingModel)' != 'outofprocess' AND '%(_DeployProjectPaths.HostingModel)' != 'inprocess' " />
+  </Target>
 
+  <Target Name="AddDeployedProjectsToWebConfig" BeforeTargets="AssignTargetPaths">
     <ItemGroup>
       <__DeployedProjectTransformLines Include='&lt;configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"&gt;' />
       <__DeployedProjectTransformLines Include="&lt;system.webServer&gt;" />
       <!-- In order to remove, we must have a node. So, we'll add one if it's not there and then remove it. If there were 'RemoveIfExists' we could just use that -->
       <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="InsertIfMissing" /&gt;' />
       <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="Remove" /&gt;' />
-      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Insert" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity) --contentRoot %(_DeployProjectPaths.ContentRoot)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Insert" /&gt;' />
       <__DeployedProjectTransformLines Include="&lt;/system.webServer&gt;" />
       <__DeployedProjectTransformLines Include="&lt;/configuration&gt;" />
     </ItemGroup>
