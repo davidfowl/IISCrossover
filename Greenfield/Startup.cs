@@ -44,6 +44,7 @@ namespace Greenfield
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             
             app.UseRouting();
 

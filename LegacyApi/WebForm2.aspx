@@ -5,12 +5,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <form id="form1" runat="server">
         <div>
         </div>
     </form>
-    <h1>This is another legacy webform</h1>
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>This is another legacy webform.</p>
+    </div>
+
 </body>
 </html>

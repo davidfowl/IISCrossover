@@ -27,8 +27,12 @@ namespace LegacyApi
             // At this point we've set the handler to take this request, now if this route maps to one
             // we want to redirect to ASP.NET Core, so set the handler to null
             if (Context.Request.Path.StartsWith("/api/weather", StringComparison.OrdinalIgnoreCase) ||
-                Context.Request.Path.StartsWith("/WebForm1.aspx", StringComparison.OrdinalIgnoreCase))
+                Context.Request.Path.StartsWith("/WebForm1.aspx", StringComparison.OrdinalIgnoreCase) ||
+                Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
             {
+                // Set a server variable pass state to the ASP.NET Core module
+                Context.Request.ServerVariables["FromFramework"] = "ASP.NET";
+
                 Context.RemapHandler(null);
             }
         }
