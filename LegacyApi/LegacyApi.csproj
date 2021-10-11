@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <DeployProjectReference Include="../Greenfield/Greenfield.csproj" HostingModel="outofprocess" />
+    <DeployProjectReference Include="../Greenfield/Greenfield.csproj" HostingModel="inprocess" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
