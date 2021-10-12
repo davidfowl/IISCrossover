@@ -93,6 +93,13 @@ namespace Mvc3ToolsUpdateWeb_Default.Controllers
                 MembershipCreateStatus createStatus;
                 Membership.CreateUser(model.UserName, model.Password, model.Email, "question", "answer", true, null, out createStatus);
 
+                if (!Roles.RoleExists("Administrator"))
+                {
+                    Roles.CreateRole("Administrator");
+                }
+
+                Roles.AddUserToRoles(model.UserName, new[] { "Administrator" });
+
                 if (createStatus == MembershipCreateStatus.Success)
                 {
                     MigrateShoppingCart(model.UserName); 
