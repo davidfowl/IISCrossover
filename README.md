@@ -8,6 +8,8 @@ This is an experiment showing how to run ASP.NET WebAPI and ASP.NET Core in the 
 
     ![image](https://user-images.githubusercontent.com/95136/79828724-2df9e780-8356-11ea-9890-7e478c87b86d.png)
 
+1. Mark Greenfield as the startup project and run the application for first time initialization.
+1. Stop the app.
 1. Mark LegacyApi as the startup project and run the application.
 1. Navigating to /api/weather/* will take you to the ASP.NET Core application, and all other URLs go to the ASP.NET application.
 
