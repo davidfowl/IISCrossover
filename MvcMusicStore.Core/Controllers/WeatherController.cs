@@ -37,6 +37,34 @@ namespace MvcMusicStore.Core.Controllers
             .ToArray();
         }
 
+        [HttpGet("debug")]
+        public string Debug()
+        {
+            string userNameText = "NotAuthenticated";
+            if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                userNameText = User.Identity.Name;
+            }
+
+            var responseText = $"Welcome {userNameText}{Environment.NewLine}";
+
+            responseText += $"Claims: {Environment.NewLine}";
+            foreach(var claim in User.Claims)
+            {
+                responseText += $"    {claim.Type}:{claim.Value}{Environment.NewLine}";
+            }
+
+            responseText += RoleCheck("Administrator");
+            responseText += RoleCheck("WeatherReader");
+
+            return responseText;
+
+            string RoleCheck(string roleName)
+            {
+                return $"UserIsInRole {roleName}: {User.IsInRole(roleName)}{Environment.NewLine}";
+            }
+        }
+
         [HttpGet("pid")]
         public int GetPid()
         {

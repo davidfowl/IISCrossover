@@ -1,9 +1,12 @@
-﻿using System;
+﻿using IISCrossover.Authentication;
+using IISCrossover.Authentication.Net;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.Security;
 
 namespace MvcMusicStore
 {
@@ -29,6 +32,7 @@ namespace MvcMusicStore
             {
                 // Set a server variable pass state to the ASP.NET Core module
                 Context.Request.ServerVariables["FromFramework"] = "ASP.NET";
+                AuthenticationBridge.ShareUser(Context);
 
                 Context.RemapHandler(null);
             }

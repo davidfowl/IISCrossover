@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MvcMusicStore</RootNamespace>
     <AssemblyName>MvcMusicStore</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
     <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
@@ -237,6 +237,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Store\GenreMenu.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IISCrossover.Authentication.Net\IISCrossover.Authentication.Net.csproj">
+      <Project>{17A6BADC-B35D-49E5-ADFC-F045D4E79677}</Project>
+      <Name>IISCrossover.Authentication.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
