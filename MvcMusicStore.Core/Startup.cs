@@ -2,7 +2,6 @@ using IISCrossover;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -10,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace MvcMusicStore.Core
 {
@@ -65,11 +63,6 @@ namespace MvcMusicStore.Core
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", context =>
-                {
-                    return context.Response.WriteAsync(@"<a href='/api/weather'>api/weather</a><br/><a href='/api/weather/debug'>api/weather/debug</a>");
-                });
-
                 endpoints.MapControllers();
             });
         }
