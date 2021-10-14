@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MvcMusicStore.Core.Models;
-using System;
-using System.Collections.Generic;
+using MvcMusicStore.ViewModels;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MvcMusicStore.Core.Controllers
 {

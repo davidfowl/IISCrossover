@@ -1,11 +1,17 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
 using System.Collections.Generic;
+#if !NETCOREAPP
+using System.Web.Mvc;
+#endif
 
 namespace MvcMusicStore.Models
 {
+#if NETCOREAPP
+    // Need to update Bind to Include as exclude isn't supported in .NET Core
+#else
     [Bind(Exclude = "AlbumId")]
+#endif
     public class Album
     {
         [ScaffoldColumn(false)]

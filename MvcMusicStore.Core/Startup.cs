@@ -24,6 +24,12 @@ namespace MvcMusicStore.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddHttpContextAccessor();
+
+            services.AddScoped(typeof(IHttpContext), typeof(HttpContextImpl));
+
+            services.AddSingleton<ISerializer>(new SerializerImpl());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
