@@ -1,5 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net;
+#if NETCOREAPP
+using Microsoft.AspNetCore.Mvc;
+#else
 using System.Web.Mvc;
+#endif
+
 using MvcMusicStore.Models;
 using MvcMusicStore.ViewModels;
 
@@ -7,14 +14,27 @@ namespace MvcMusicStore.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        MusicStoreEntities storeDB = new MusicStoreEntities();
+        private IHttpContext _httpContext;
+        private MusicStoreEntities storeDB = new MusicStoreEntities();
+
+#if NETCOREAPP
+        public ShoppingCartController(IHttpContext httpContext)
+        {
+            _httpContext = httpContext ?? throw new ArgumentNullException(nameof(httpContext));
+        }
+#else
+        public ShoppingCartController()
+        {
+            _httpContext = new HttpContextImpl();
+        }
+#endif
 
         //
         // GET: /ShoppingCart/
 
         public ActionResult Index()
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext);
+            var cart = ShoppingCart.GetCart(_httpContext);
 
             // Set up our ViewModel
             var viewModel = new ShoppingCartViewModel
@@ -38,7 +58,7 @@ namespace MvcMusicStore.Controllers
                 .Single(album => album.AlbumId == id);
 
             // Add it to the shopping cart
-            var cart = ShoppingCart.GetCart(this.HttpContext);
+            var cart = ShoppingCart.GetCart(_httpContext);
 
             cart.AddToCart(addedAlbum);
 
@@ -53,7 +73,7 @@ namespace MvcMusicStore.Controllers
         public ActionResult RemoveFromCart(int id)
         {
             // Remove the item from the cart
-            var cart = ShoppingCart.GetCart(this.HttpContext);
+            var cart = ShoppingCart.GetCart(_httpContext);
 
             // Get the name of the album to display confirmation
             string albumName = storeDB.Carts
@@ -65,8 +85,7 @@ namespace MvcMusicStore.Controllers
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
-                Message = Server.HtmlEncode(albumName) +
-                    " has been removed from your shopping cart.",
+                Message = $"{WebUtility.UrlEncode(albumName)} has been removed from your shopping cart.",
                 CartTotal = cart.GetTotal(),
                 CartCount = cart.GetCount(),
                 ItemCount = itemCount,
@@ -79,10 +98,12 @@ namespace MvcMusicStore.Controllers
         //
         // GET: /ShoppingCart/CartSummary
 
+#if !NETCOREAPP
         [ChildActionOnly]
+#endif
         public ActionResult CartSummary()
         {
-            var cart = ShoppingCart.GetCart(this.HttpContext);
+            var cart = ShoppingCart.GetCart(_httpContext);
 
             ViewData["CartCount"] = cart.GetCount();
 

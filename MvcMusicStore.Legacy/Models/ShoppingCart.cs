@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 
 namespace MvcMusicStore.Models
 {
@@ -14,18 +12,13 @@ namespace MvcMusicStore.Models
 
         public const string CartSessionKey = "CartId";
 
-        public static ShoppingCart GetCart(HttpContextBase context)
+        public static ShoppingCart GetCart(IHttpContext context)
         {
             var cart = new ShoppingCart();
             cart.ShoppingCartId = cart.GetCartId(context);
             return cart;
         }
 
-        // Helper method to simplify shopping cart calls
-        public static ShoppingCart GetCart(Controller controller)
-        {
-            return GetCart(controller.HttpContext);
-        }
 
         public void AddToCart(Album album)
         {
@@ -163,7 +156,7 @@ cart => cart.CartId == ShoppingCartId
         }
 
         // We're using HttpContextBase to allow access to cookies.
-        public string GetCartId(HttpContextBase context)
+        public string GetCartId(IHttpContext context)
         {
             if (context.Session[CartSessionKey] == null)
             {
