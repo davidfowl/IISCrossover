@@ -1,5 +1,4 @@
-﻿using IISCrossover.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using IISCrossover;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -51,13 +50,35 @@ namespace MvcMusicStore.Core.Controllers
             var responseText = $"Welcome {userNameText}{Environment.NewLine}";
 
             responseText += $"Claims: {Environment.NewLine}";
-            foreach(var claim in User.Claims)
+            if (User?.Claims == null || User.Claims.Count() == 0)
             {
-                responseText += $"    {claim.Type}:{claim.Value}{Environment.NewLine}";
+                responseText += $"    No Claims are set{Environment.NewLine}";
+            }
+            else
+            {
+                foreach (var claim in User.Claims)
+                {
+                    responseText += $"    {claim.Type}:{claim.Value}{Environment.NewLine}";
+                }
             }
 
             responseText += RoleCheck("Administrator");
             responseText += RoleCheck("WeatherReader");
+
+            responseText += $"SessionVars: {Environment.NewLine}";
+            if (HttpContext?.Session.Keys == null || HttpContext.Session.Keys.Count() == 0)
+            {
+                responseText += $"    No Session vars are set{Environment.NewLine}";
+                responseText += $"GlobalServerVar:{Environment.NewLine}{HttpContext.GetServerVariable(IISCrossoverVars.Session)}{Environment.NewLine}";
+            }
+            else
+            {
+                foreach (var key in HttpContext.Session.Keys)
+                {
+                    // assumes our demo only uses strings for session data
+                    responseText += $"    {key}:{HttpContext.Session.GetString(key)}{Environment.NewLine}";
+                }
+            }
 
             return responseText;
 

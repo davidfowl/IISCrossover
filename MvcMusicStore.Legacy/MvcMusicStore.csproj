@@ -145,6 +145,7 @@
     <Compile Include="Models\SampleData.cs" />
     <Compile Include="Models\ShoppingCart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SessionBridge.cs" />
     <Compile Include="ViewModels\ShoppingCartRemoveViewModel.cs" />
     <Compile Include="ViewModels\ShoppingCartViewModel.cs" />
   </ItemGroup>
@@ -268,9 +269,9 @@
     <Content Include="Views\Store\GenreMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IISCrossover.Authentication\IISCrossover.Authentication.csproj">
+    <ProjectReference Include="..\IISCrossover.Authentication\IISCrossover.csproj">
       <Project>{48cb76d4-1103-42e0-974e-5b0351d4aaff}</Project>
-      <Name>IISCrossover.Authentication</Name>
+      <Name>IISCrossover</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

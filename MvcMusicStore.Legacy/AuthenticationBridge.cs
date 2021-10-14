@@ -1,4 +1,4 @@
-﻿using IISCrossover.Authentication;
+﻿using IISCrossover;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,9 @@ namespace MvcMusicStore
     {
         public static void ShareUser(HttpContext context)
         {
+            if (context == null)
+                return;
+
             var claimsPrincipal = context?.User as ClaimsPrincipal;
             if (claimsPrincipal != null)
             {
@@ -21,7 +24,7 @@ namespace MvcMusicStore
                     buffer[claim.Type] = claim.Value;
                 }
 
-                context.Request.ServerVariables[CrossoverAuthenticationVars.Claims] = JsonSerializer.Serialize(buffer);
+                context.Request.ServerVariables[IISCrossoverVars.Claims] = JsonSerializer.Serialize(buffer);
             }
         }
     }

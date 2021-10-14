@@ -17,6 +17,16 @@ namespace MvcMusicStore
         {
             filters.Add(new HandleErrorAttribute());
         }
+
+        private void Application_AcquireRequestState(object sender, EventArgs e)
+        {
+            if (Context.Request.Path.StartsWith("/api/weather", StringComparison.OrdinalIgnoreCase) ||
+                   Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
+            {
+                SessionBridge.ShareSession(Context);
+            }
+        }
+
         private void Application_PostResolveRequestCache(object sender, EventArgs e)
         {
             // Here we're going to decide which routes map to ASP.NET Core and which ones map to ASP.NET 
@@ -28,10 +38,10 @@ namespace MvcMusicStore
             if (Context.Request.Path.StartsWith("/api/weather", StringComparison.OrdinalIgnoreCase) ||
                 Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
             {
+                Context.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
                 // Set a server variable pass state to the ASP.NET Core module
                 Context.Request.ServerVariables["FromFramework"] = "ASP.NET";
                 AuthenticationBridge.ShareUser(Context);
-
                 Context.RemapHandler(null);
             }
         }

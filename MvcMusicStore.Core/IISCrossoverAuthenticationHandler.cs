@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
-using IISCrossover.Authentication;
+using IISCrossover;
 using System.Text.Json;
 using System.Diagnostics;
 
@@ -35,17 +35,10 @@ namespace MvcMusicStore.Core
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var bufferText = Context.GetServerVariable(CrossoverAuthenticationVars.Claims);
+            var bufferText = Context.GetServerVariable(IISCrossoverVars.Claims);
             var claims = new List<Claim>();
 
-            if (Debugger.IsAttached)
-            {
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, "model.UserId.ToString()"));
-                claims.Add(new Claim(ClaimTypes.Email, "model.EmailAddress"));
-                claims.Add(new Claim(ClaimTypes.Name, "YOLO"));
-                claims.Add(new Claim(ClaimTypes.Role, "Administrator"));
-            }
-            else if(!string.IsNullOrWhiteSpace(bufferText))
+            if(!string.IsNullOrWhiteSpace(bufferText))
             {
                 try
                 {
