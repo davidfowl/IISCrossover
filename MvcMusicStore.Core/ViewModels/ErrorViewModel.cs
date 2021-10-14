@@ -1,6 +1,4 @@
-using System;
-
-namespace MvcMusicStore.Core.Models
+namespace MvcMusicStore.ViewModels
 {
     public class ErrorViewModel
     {

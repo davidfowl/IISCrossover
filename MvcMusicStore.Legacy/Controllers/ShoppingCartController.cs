@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 #if NETCOREAPP
 using Microsoft.AspNetCore.Mvc;
 #else
@@ -84,8 +85,7 @@ namespace MvcMusicStore.Controllers
             // Display the confirmation message
             var results = new ShoppingCartRemoveViewModel
             {
-                Message = Server.HtmlEncode(albumName) +
-                    " has been removed from your shopping cart.",
+                Message = $"{WebUtility.UrlEncode(albumName)} has been removed from your shopping cart.",
                 CartTotal = cart.GetTotal(),
                 CartCount = cart.GetCount(),
                 ItemCount = itemCount,
@@ -98,7 +98,9 @@ namespace MvcMusicStore.Controllers
         //
         // GET: /ShoppingCart/CartSummary
 
+#if !NETCOREAPP
         [ChildActionOnly]
+#endif
         public ActionResult CartSummary()
         {
             var cart = ShoppingCart.GetCart(_httpContext);

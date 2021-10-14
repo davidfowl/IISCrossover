@@ -111,7 +111,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="FrameworkDependentImpl\SessionImpl.cs" />
-    <Compile Include="FrameworkDependentImpl\IndentityImpl.cs" />
+    <Compile Include="FrameworkDependentImpl\IdentityImpl.cs" />
     <Compile Include="Interfaces\IHttpContext.cs" />
     <Compile Include="Interfaces\IIdentity.cs" />
     <Compile Include="Interfaces\IPrincipal.cs" />
