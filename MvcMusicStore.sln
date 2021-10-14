@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31717.71
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcMusicStore", "MvcMusicStore.Legacy\MvcMusicStore.csproj", "{32DCD27D-A84C-4250-B657-408B3620A9AC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcMusicStore.Core", "MvcMusicStore.Core\MvcMusicStore.Core.csproj", "{E2ED3401-102B-4197-A84E-ED1A3D65E862}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IISCrossover.Authentication", "IISCrossover.Authentication\IISCrossover.Authentication.csproj", "{48CB76D4-1103-42E0-974E-5B0351D4AAFF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IISCrossover.Authentication.Core", "IISCrossover.Authentication.Core\IISCrossover.Authentication.Core.csproj", "{D4EB1202-FBE9-4F68-85AF-34D8FC5514B8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IISCrossover.Authentication.Net", "IISCrossover.Authentication.Net\IISCrossover.Authentication.Net.csproj", "{17A6BADC-B35D-49E5-ADFC-F045D4E79677}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IISCrossover.Authentication", "IISCrossover.Authentication\IISCrossover.Authentication.csproj", "{48CB76D4-1103-42E0-974E-5B0351D4AAFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +27,6 @@ Global
 		{48CB76D4-1103-42E0-974E-5B0351D4AAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48CB76D4-1103-42E0-974E-5B0351D4AAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48CB76D4-1103-42E0-974E-5B0351D4AAFF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4EB1202-FBE9-4F68-85AF-34D8FC5514B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4EB1202-FBE9-4F68-85AF-34D8FC5514B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4EB1202-FBE9-4F68-85AF-34D8FC5514B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4EB1202-FBE9-4F68-85AF-34D8FC5514B8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17A6BADC-B35D-49E5-ADFC-F045D4E79677}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17A6BADC-B35D-49E5-ADFC-F045D4E79677}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17A6BADC-B35D-49E5-ADFC-F045D4E79677}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17A6BADC-B35D-49E5-ADFC-F045D4E79677}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

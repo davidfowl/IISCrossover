@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IISCrossover.Authentication.Core\IISCrossover.Authentication.Core.csproj" />
+    <ProjectReference Include="..\IISCrossover.Authentication\IISCrossover.Authentication.csproj" />
   </ItemGroup>
 
 </Project>

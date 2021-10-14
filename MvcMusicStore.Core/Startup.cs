@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IISCrossover.Authentication.Core;
 using Microsoft.AspNetCore.Http;
 
 namespace MvcMusicStore.Core
@@ -28,14 +27,18 @@ namespace MvcMusicStore.Core
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            services.AddCrossoverAuthentication();
+            var scheme = "iAmNotACookie";
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = scheme;
+            })
+            .AddScheme<IISCrossoverAuthenticationSchemeOptions, IISCrossoverAuthenticationHandler>(scheme, op => { });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            System.Diagnostics.Debugger.Launch();
+            //System.Diagnostics.Debugger.Launch();
 
             if (env.IsDevelopment())
             {
@@ -57,10 +60,13 @@ namespace MvcMusicStore.Core
 
             app.UseAuthorization();
 
-            app.UseCrossoverAuthentication();
-
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGet("/", context =>
+                {
+                    return context.Response.WriteAsync(@"<a href='/api/weather'>api/weather</a><br/><a href='/api/weather/debug'>api/weather/debug</a>");
+                });
+
                 endpoints.MapControllers();
             });
         }
