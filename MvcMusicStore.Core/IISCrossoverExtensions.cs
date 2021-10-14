@@ -10,21 +10,6 @@ namespace MvcMusicStore.Core
 {
     public static class IISCrossoverExtensions
     {
-        public static IServiceCollection AddIISCrossover(this IServiceCollection services)
-        {
-            services.AddIISCrossoverAuthentication();
-            services.AddIISCrossoverSession();
-            return services;
-        }
-
-        public static IServiceCollection AddIISCrossoverSession(this IServiceCollection services)
-        {
-            services.AddDistributedMemoryCache();
-            services.AddSession();
-
-            return services;
-        }
-
         public static IServiceCollection AddIISCrossoverAuthentication(this IServiceCollection services)
         {
             var uniqueId = "8eddae4a-3f82-4276-afd5-714104e7a43a";
@@ -40,7 +25,6 @@ namespace MvcMusicStore.Core
 
         public static IApplicationBuilder UseIISCrossoverSession(this IApplicationBuilder app)
         {
-            app.UseSession();
             app.UseMiddleware<IISCrossoverSessionMiddleware>();
 
             return app;
