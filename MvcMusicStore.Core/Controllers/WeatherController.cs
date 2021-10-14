@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IISCrossover;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -35,6 +36,56 @@ namespace MvcMusicStore.Core.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("debug")]
+        public string Debug()
+        {
+            string userNameText = "NotAuthenticated";
+            if (User?.Identity?.IsAuthenticated ?? false)
+            {
+                userNameText = User.Identity.Name;
+            }
+
+            var responseText = $"Welcome {userNameText}{Environment.NewLine}";
+
+            responseText += $"Claims: {Environment.NewLine}";
+            if (User?.Claims == null || User.Claims.Count() == 0)
+            {
+                responseText += $"    No Claims are set{Environment.NewLine}";
+            }
+            else
+            {
+                foreach (var claim in User.Claims)
+                {
+                    responseText += $"    {claim.Type}:{claim.Value}{Environment.NewLine}";
+                }
+            }
+
+            responseText += RoleCheck("Administrator");
+            responseText += RoleCheck("WeatherReader");
+
+            responseText += $"SessionVars: {Environment.NewLine}";
+            if (HttpContext?.Session.Keys == null || HttpContext.Session.Keys.Count() == 0)
+            {
+                responseText += $"    No Session vars are set{Environment.NewLine}";
+                responseText += $"GlobalServerVar:{Environment.NewLine}{HttpContext.GetServerVariable(IISCrossoverVars.Session)}{Environment.NewLine}";
+            }
+            else
+            {
+                foreach (var key in HttpContext.Session.Keys)
+                {
+                    // assumes our demo only uses strings for session data
+                    responseText += $"    {key}:{HttpContext.Session.GetString(key)}{Environment.NewLine}";
+                }
+            }
+
+            return responseText;
+
+            string RoleCheck(string roleName)
+            {
+                return $"UserIsInRole {roleName}: {User.IsInRole(roleName)}{Environment.NewLine}";
+            }
         }
 
         [HttpGet("pid")]
