@@ -1,6 +1,6 @@
-﻿namespace IISCrossover.Authentication
+﻿namespace IISCrossover
 {
-    public static class CrossoverAuthenticationVars
+    public static class IISCrossoverVars
     {
         private const string _unique = "77a297cf-0651-4fb6-9c83-73a716e7a2f9";
 
