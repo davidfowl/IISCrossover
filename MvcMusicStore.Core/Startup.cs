@@ -37,8 +37,6 @@ namespace MvcMusicStore.Core
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //System.Diagnostics.Debugger.Launch();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
