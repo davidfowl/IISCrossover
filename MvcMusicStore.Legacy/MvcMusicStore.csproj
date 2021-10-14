@@ -269,8 +269,8 @@
     <Content Include="Views\Store\GenreMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IISCrossover.Authentication\IISCrossover.csproj">
-      <Project>{48cb76d4-1103-42e0-974e-5b0351d4aaff}</Project>
+    <ProjectReference Include="..\IISCrossover\IISCrossover.csproj">
+      <Project>{b0fd88e9-5a4c-4331-b8e0-5ce907b0c332}</Project>
       <Name>IISCrossover</Name>
     </ProjectReference>
   </ItemGroup>
