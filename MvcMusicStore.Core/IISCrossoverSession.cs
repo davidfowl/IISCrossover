@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,44 +9,42 @@ namespace MvcMusicStore.Core
 {
     internal class IISCrossoverSession : ISession
     {
-        private readonly ISession _originalSession;
         private Dictionary<string, string> _aspNetFrameworkSession;
 
-        public IISCrossoverSession(ISession originalSession, Dictionary<string, string> aspNetFrameworkSession)
+        public IISCrossoverSession(Dictionary<string, string> aspNetFrameworkSession)
         {
-            _originalSession = originalSession;
             _aspNetFrameworkSession = aspNetFrameworkSession;
         }
 
-        public string Id => _originalSession.Id;
+        public string Id => throw new NotImplementedException();
 
-        public bool IsAvailable => _originalSession.IsAvailable;
+        public bool IsAvailable => true;
 
-        public IEnumerable<string> Keys => _aspNetFrameworkSession.Keys.Union(_originalSession.Keys);
+        public IEnumerable<string> Keys => _aspNetFrameworkSession.Keys;
 
         public void Clear()
         {
-            _originalSession.Clear();
+            // no-op
         }
 
         public Task CommitAsync(CancellationToken cancellationToken = default)
         {
-            return _originalSession.CommitAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public Task LoadAsync(CancellationToken cancellationToken = default)
         {
-            return _originalSession.LoadAsync(cancellationToken);
+            return Task.CompletedTask;
         }
 
         public void Remove(string key)
         {
-            _originalSession.Remove(key);
+            // no-op
         }
 
         public void Set(string key, byte[] value)
         {
-            _originalSession.Set(key, value);
+            // no-op
         }
 
         public bool TryGetValue(string key, out byte[] value)
@@ -56,8 +54,8 @@ namespace MvcMusicStore.Core
                 value = Encoding.UTF8.GetBytes(_aspNetFrameworkSession[key]);
                 return true;
             }
-
-            return _originalSession.TryGetValue(key, out value);
+            value = null;
+            return false;
         }
     }
 }

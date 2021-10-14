@@ -19,12 +19,11 @@ namespace MvcMusicStore.Core
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var existingSession = context.Features.Get<ISessionFeature>().Session;
             var sessionString = context.Features.Get<IServerVariablesFeature>()?[IISCrossoverVars.Session];
-            if (existingSession != null && sessionString != null)
+            if (sessionString != null)
             {
                 var aspNetFrameworkSession = JsonSerializer.Deserialize<Dictionary<string, string>>(sessionString);
-                var crossOverSession = new IISCrossoverSession(existingSession, aspNetFrameworkSession);
+                var crossOverSession = new IISCrossoverSession(aspNetFrameworkSession);
                 context.Features.Set<ISessionFeature>(new SessionFeature() { Session = crossOverSession });
             }
 
