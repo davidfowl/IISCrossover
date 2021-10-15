@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MvcMusicStore.Core
 {
-    internal class IISCrossoverSession : ISession
+    internal class IISCrossoverSession : Microsoft.AspNetCore.Http.ISession
     {
         private Dictionary<string, string> _aspNetFrameworkSession;
 
