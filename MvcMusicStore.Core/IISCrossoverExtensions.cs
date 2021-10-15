@@ -9,6 +9,6 @@ namespace MvcMusicStore.Core
             => builder.AddScheme<IISCrossoverAuthenticationSchemeOptions, IISCrossoverAuthenticationHandler>(IISCrossoverAuthenticationDefaults.AuthenticationScheme, op => { });
 
         public static IApplicationBuilder UseIISCrossoverSession(this IApplicationBuilder app)
-            => app.UseMiddleware<IISCrossoverSessionMiddleware>()
+            => app.UseMiddleware<IISCrossoverSessionMiddleware>();
     }
 }
