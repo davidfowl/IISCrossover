@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Text;
+using Microsoft.AspNetCore.Http;
 
 namespace MvcMusicStore
 {
@@ -15,9 +17,19 @@ namespace MvcMusicStore
 
         public object this[string key]
         {
-            get => _httpContextAccessor.HttpContext.Session.Get(key);
+            // TODO: Support more than just strings
+            get => Encoding.UTF8.GetString(_httpContextAccessor.HttpContext.Session.Get(key));
 
-            set => _httpContextAccessor.HttpContext.Session.Set(key, _serializer.Serialize<string>(value));
+            set
+            {
+                if (!(value is string))
+                {
+                    throw new NotSupportedException();
+                }
+
+                _httpContextAccessor.HttpContext.Session.Set(key, Encoding.UTF8.GetBytes((string)value));
+            }
+
         }
     }
 }
