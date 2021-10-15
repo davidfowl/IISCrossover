@@ -1,10 +1,10 @@
-﻿using IISCrossover;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.Threading.Tasks;
+using IISCrossover;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Session;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MvcMusicStore.Core
 {
@@ -17,9 +17,9 @@ namespace MvcMusicStore.Core
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public Task InvokeAsync(HttpContext context)
         {
-            var sessionString = context.Features.Get<IServerVariablesFeature>()?[IISCrossoverVars.Session];
+            var sessionString = context.GetServerVariable(IISCrossoverVars.Session);
             if (sessionString != null)
             {
                 var aspNetFrameworkSession = JsonSerializer.Deserialize<Dictionary<string, string>>(sessionString);
@@ -27,7 +27,7 @@ namespace MvcMusicStore.Core
                 context.Features.Set<ISessionFeature>(new SessionFeature() { Session = crossOverSession });
             }
 
-            await _next(context);
+            return _next(context);
         }
     }
 }

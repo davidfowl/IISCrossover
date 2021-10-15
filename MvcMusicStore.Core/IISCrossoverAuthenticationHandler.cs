@@ -1,28 +1,32 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IISCrossover;
-using System.Text.Json;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace MvcMusicStore.Core
 {
+    public static class IISCrossoverAuthenticationDefaults
+    {
+        /// <summary>
+        /// The default value used for AuthenticationSchemeOptions.AuthenticationScheme
+        /// </summary>
+        public const string AuthenticationScheme = "IISCrossOver";
+    }
+
     public class IISCrossoverAuthenticationSchemeOptions
         : AuthenticationSchemeOptions
-    { }
+    {
+    }
 
     public class IISCrossoverAuthenticationHandler
         : AuthenticationHandler<IISCrossoverAuthenticationSchemeOptions>
     {
-        private ILogger _logger;
-
         public IISCrossoverAuthenticationHandler(
             IOptionsMonitor<IISCrossoverAuthenticationSchemeOptions> options,
             ILoggerFactory logger,
@@ -30,7 +34,6 @@ namespace MvcMusicStore.Core
             ISystemClock clock)
             : base(options, logger, encoder, clock)
         {
-            _logger = logger.CreateLogger(this.GetType().ToString());
         }
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -38,7 +41,7 @@ namespace MvcMusicStore.Core
             var bufferText = Context.GetServerVariable(IISCrossoverVars.Claims);
             var claims = new List<Claim>();
 
-            if(!string.IsNullOrWhiteSpace(bufferText))
+            if (!string.IsNullOrWhiteSpace(bufferText))
             {
                 try
                 {
@@ -58,10 +61,10 @@ namespace MvcMusicStore.Core
             if (claims.Count > 0)
             {
                 // generate claimsIdentity on the name of the class
-                var claimsIdentity = new ClaimsIdentity(claims, nameof(IISCrossoverAuthenticationHandler));
+                var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
 
                 // generate AuthenticationTicket from the Identity and current authentication scheme
-                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), this.Scheme.Name);
+                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
 
                 // pass on the ticket to the middleware
                 return Task.FromResult(AuthenticateResult.Success(ticket));

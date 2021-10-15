@@ -48,9 +48,10 @@ namespace MvcMusicStore.Core
 
         public bool TryGetValue(string key, out byte[] value)
         {
-            if (_aspNetFrameworkSession.ContainsKey(key))
+            if (_aspNetFrameworkSession.TryGetValue(key, out var raw))
             {
-                value = Encoding.UTF8.GetBytes(_aspNetFrameworkSession[key]);
+                // REVIEW: Can we do this once per key
+                value = Encoding.UTF8.GetBytes(raw);
                 return true;
             }
             value = null;
