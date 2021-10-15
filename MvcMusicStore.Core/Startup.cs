@@ -21,7 +21,7 @@ namespace MvcMusicStore.Core
             services.AddAuthentication(IISCrossoverAuthenticationDefaults.AuthenticationScheme)
                     .AddIISCrossoverAuthentication();
 
-            services.AddControllers();
+            services.AddControllersWithViews();
 
             services.AddHttpContextAccessor();
 
@@ -57,6 +57,7 @@ namespace MvcMusicStore.Core
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapDefaultControllerRoute();
                 endpoints.MapControllers();
             });
         }

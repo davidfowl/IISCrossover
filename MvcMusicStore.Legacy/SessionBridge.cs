@@ -7,7 +7,6 @@ namespace MvcMusicStore
 {
     public static class SessionBridge
     {
-
         public static void ShareSession(HttpContext context)
         {
             if (context == null || context.Session == null || context.Session.Count == 0)

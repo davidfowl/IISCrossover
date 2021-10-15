@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using System.Web.SessionState;
 
 namespace MvcMusicStore
 {
@@ -21,7 +22,7 @@ namespace MvcMusicStore
         private void Application_AcquireRequestState(object sender, EventArgs e)
         {
             if (Context.Request.Path.StartsWith("/api/weather", StringComparison.OrdinalIgnoreCase) ||
-                   Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
+                Context.Request.Path.StartsWith("/ShoppingCart", StringComparison.OrdinalIgnoreCase))
             {
                 SessionBridge.ShareSession(Context);
             }
@@ -36,12 +37,13 @@ namespace MvcMusicStore
             // At this point we've set the handler to take this request, now if this route maps to one
             // we want to redirect to ASP.NET Core, so set the handler to null
             if (Context.Request.Path.StartsWith("/api/weather", StringComparison.OrdinalIgnoreCase) ||
-                Context.Request.Path.StartsWith("/css", StringComparison.OrdinalIgnoreCase))
+                Context.Request.Path.StartsWith("/ShoppingCart", StringComparison.OrdinalIgnoreCase))
             {
-                Context.SetSessionStateBehavior(System.Web.SessionState.SessionStateBehavior.Required);
-                // Set a server variable pass state to the ASP.NET Core module
-                Context.Request.ServerVariables["FromFramework"] = "ASP.NET";
+                // We want to share session for requests that make it to ASP.NET Core
+                Context.SetSessionStateBehavior(SessionStateBehavior.Required);
+
                 AuthenticationBridge.ShareUser(Context);
+
                 Context.RemapHandler(null);
             }
         }
