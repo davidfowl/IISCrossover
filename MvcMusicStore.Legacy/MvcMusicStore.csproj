@@ -69,7 +69,6 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -283,7 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IISCrossover\IISCrossover.csproj">
-      <Project>{b0fd88e9-5a4c-4331-b8e0-5ce907b0c332}</Project>
+      <Project>{B0FD88E9-5A4C-4331-B8E0-5CE907B0C332}</Project>
       <Name>IISCrossover</Name>
     </ProjectReference>
   </ItemGroup>

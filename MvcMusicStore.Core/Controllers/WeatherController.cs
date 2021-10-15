@@ -49,7 +49,16 @@ namespace MvcMusicStore.Core.Controllers
 
             var responseText = $"Welcome {userNameText}{Environment.NewLine}";
 
-            responseText += $"Claims: {Environment.NewLine}";
+            responseText += ExamineClaims();
+
+            responseText += ExamineSession();
+
+            return responseText;
+        }
+
+        private string ExamineClaims()
+        {
+            string responseText = $"Claims: {Environment.NewLine}";
             if (User?.Claims == null || User.Claims.Count() == 0)
             {
                 responseText += $"    No Claims are set{Environment.NewLine}";
@@ -65,27 +74,40 @@ namespace MvcMusicStore.Core.Controllers
             responseText += RoleCheck("Administrator");
             responseText += RoleCheck("WeatherReader");
 
-            responseText += $"SessionVars: {Environment.NewLine}";
-            if (HttpContext?.Session.Keys == null || HttpContext.Session.Keys.Count() == 0)
-            {
-                responseText += $"    No Session vars are set{Environment.NewLine}";
-                responseText += $"GlobalServerVar:{Environment.NewLine}{HttpContext.GetServerVariable(IISCrossoverVars.Session)}{Environment.NewLine}";
-            }
-            else
-            {
-                foreach (var key in HttpContext.Session.Keys)
-                {
-                    // assumes our demo only uses strings for session data
-                    responseText += $"    {key}:{HttpContext.Session.GetString(key)}{Environment.NewLine}";
-                }
-            }
-
             return responseText;
 
             string RoleCheck(string roleName)
             {
                 return $"UserIsInRole {roleName}: {User.IsInRole(roleName)}{Environment.NewLine}";
             }
+        }
+
+        private string ExamineSession()
+        {
+            string responseText = string.Empty;
+            try
+            {
+                responseText += $"SessionVars: {Environment.NewLine}";
+                if (HttpContext?.Session.Keys == null || HttpContext.Session.Keys.Count() == 0)
+                {
+                    responseText += $"    No Session vars are set{Environment.NewLine}";
+                    responseText += $"GlobalServerVar:{Environment.NewLine}{HttpContext.GetServerVariable(IISCrossoverVars.Session)}{Environment.NewLine}";
+                }
+                else
+                {
+                    foreach (var key in HttpContext.Session.Keys)
+                    {
+                        // assumes our demo only uses strings for session data
+                        responseText += $"    {key}:{HttpContext.Session.GetString(key)}{Environment.NewLine}";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                responseText += $"    {ex.Message}";
+            }
+
+            return responseText;
         }
 
         [HttpGet("pid")]
