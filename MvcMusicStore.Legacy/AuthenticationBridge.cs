@@ -1,9 +1,7 @@
 ﻿using IISCrossover;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Security.Claims;
-using System.Text.Json;
 using System.Web;
 
 namespace MvcMusicStore
@@ -18,13 +16,14 @@ namespace MvcMusicStore
             var claimsPrincipal = context?.User as ClaimsPrincipal;
             if (claimsPrincipal != null)
             {
-                var buffer = new Dictionary<string, string>();
-                foreach(var claim in claimsPrincipal.Claims)
-                {
-                    buffer[claim.Type] = claim.Value;
-                }
+                // TODO: Efficiency
+                var ms = new MemoryStream();
+                var writer = new BinaryWriter(ms);
+                claimsPrincipal.WriteTo(writer);
 
-                context.Request.ServerVariables[IISCrossoverVars.Claims] = JsonSerializer.Serialize(buffer);
+                var serialized = Convert.ToBase64String(ms.ToArray());
+
+                context.Request.ServerVariables[IISCrossoverVars.Claims] = serialized;
             }
         }
     }

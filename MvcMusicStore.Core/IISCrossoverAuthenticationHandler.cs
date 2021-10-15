@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Threading.Tasks;
 using IISCrossover;
 using Microsoft.AspNetCore.Authentication;
@@ -38,19 +38,16 @@ namespace MvcMusicStore.Core
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var bufferText = Context.GetServerVariable(IISCrossoverVars.Claims);
-            var claims = new List<Claim>();
+            var serializedClaimsPrincipal = Context.GetServerVariable(IISCrossoverVars.Claims);
+            ClaimsPrincipal claimsPrincipal = null;
 
-            if (!string.IsNullOrEmpty(bufferText))
+            if (serializedClaimsPrincipal != null)
             {
                 try
                 {
-                    var buffer = JsonSerializer.Deserialize<Dictionary<string, string>>(bufferText);
+                    var bytes = Convert.FromBase64String(serializedClaimsPrincipal);
 
-                    foreach (var kvp in buffer)
-                    {
-                        claims.Add(new Claim(kvp.Key, kvp.Value));
-                    }
+                    claimsPrincipal = new ClaimsPrincipal(new BinaryReader(new MemoryStream(bytes)));
                 }
                 catch
                 {
@@ -58,13 +55,10 @@ namespace MvcMusicStore.Core
                 }
             }
 
-            if (claims.Count > 0)
+            if (claimsPrincipal != null)
             {
-                // generate claimsIdentity on the name of the class
-                var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
-
                 // generate AuthenticationTicket from the Identity and current authentication scheme
-                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
+                var ticket = new AuthenticationTicket(claimsPrincipal, Scheme.Name);
 
                 // pass on the ticket to the middleware
                 return Task.FromResult(AuthenticateResult.Success(ticket));
