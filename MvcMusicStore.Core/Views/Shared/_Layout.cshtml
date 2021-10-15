@@ -1,48 +1,35 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MvcMusicStore.Core</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <title>@ViewBag.Title</title>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" 
+        type="text/css" />
+    <script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" 
+        type="text/javascript"></script>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MvcMusicStore.Core</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div id="header">
+        <h1><a href="/api/weather/debug">ASP.NET MVC MUSIC STORE</a></h1>
+        <ul id="navlist">
+            <li class="first"><a href="@Url.Content("~")" id="current">Home</a></li>
+            <li><a href="@Url.Content("~/Store/")">Store</a></li>
+            <li>
+                @*@{Html.RenderAction("CartSummary", "ShoppingCart");}*@
+                @await Component.InvokeAsync("CartSummary")
+            </li>
+            <li><a href="@Url.Content("~/StoreManager/")">Admin</a></li>
+        </ul>        
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - MvcMusicStore.Core - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    @*@{Html.RenderAction("GenreMenu", "Store");}*@
+    @await Component.InvokeAsync("GenreMenu")
+
+    <div id="main">
+        @RenderBody()
+    </div>
+
+    <div id="footer">
+        built with <a href="http://asp.net/mvc">ASP.NET MVC 3</a>
+    </div>
 </body>
 </html>
