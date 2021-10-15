@@ -41,7 +41,7 @@ namespace MvcMusicStore.Core
             var bufferText = Context.GetServerVariable(IISCrossoverVars.Claims);
             var claims = new List<Claim>();
 
-            if (!string.IsNullOrWhiteSpace(bufferText))
+            if (!string.IsNullOrEmpty(bufferText))
             {
                 try
                 {
@@ -54,7 +54,7 @@ namespace MvcMusicStore.Core
                 }
                 catch
                 {
-                    Task.FromResult(AuthenticateResult.Fail("Unable to process authenticated user from server variable."));
+                    return Task.FromResult(AuthenticateResult.Fail("Unable to process authenticated user from server variable."));
                 }
             }
 
