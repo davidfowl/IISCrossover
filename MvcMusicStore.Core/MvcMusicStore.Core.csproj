@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <Content Include="..\MvcMusicStore.Legacy\Views\Shared\_Layout.cshtml" Link="Views\Shared\_Layout.cshtml" />
+    <Content Include="..\MvcMusicStore.Legacy\Views\ShoppingCart\CartSummary.cshtml" Link="Views\Shared\Components\CartSummary\Default.cshtml" />
+    <Content Include="..\MvcMusicStore.Legacy\Views\Store\GenreMenu.cshtml" Link="Views\Shared\Components\GenreMenu\Default.cshtml" />
   </ItemGroup>
   
   <ItemGroup>
