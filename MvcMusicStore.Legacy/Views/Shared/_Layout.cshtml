@@ -17,7 +17,7 @@
             @{
                 #if NETCOREAPP
                     <text>@await Component.InvokeAsync("CartSummary")</text>
-                #elif !NETCOREAPP
+                #else
                     @Html.RenderAction("CartSummary", "ShoppingCart");
                 #endif
             }
@@ -30,7 +30,7 @@
     @{
         #if NETCOREAPP
             <text>@await Component.InvokeAsync("GenreMenu")</text>
-        #elif !NETCOREAPP
+        #else
             @Html.RenderAction("GenreMenu", "Store");
         #endif
     }

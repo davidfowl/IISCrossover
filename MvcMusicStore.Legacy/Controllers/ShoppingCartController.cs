@@ -98,7 +98,9 @@ namespace MvcMusicStore.Controllers
         //
         // GET: /ShoppingCart/CartSummary
 
-#if !NETCOREAPP
+#if NETCOREAPP
+        [NonAction]
+#else
         [ChildActionOnly]
 #endif
         public ActionResult CartSummary()
