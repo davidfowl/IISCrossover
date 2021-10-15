@@ -33,8 +33,4 @@
     <PackageReference Include="EntityFramework" Version="6.4.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>
