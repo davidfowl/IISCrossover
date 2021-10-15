@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="..\MvcMusicStore.Legacy\Views\Shared\_Layout.cshtml" Link="Views\Shared\_Layout.cshtml" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Compile Include="..\MvcMusicStore.Legacy\Controllers\ShoppingCartController.cs" Link="Controllers\ShoppingCartController.cs" />
     <Compile Include="..\MvcMusicStore.Legacy\Interfaces\IHttpContext.cs" Link="Interfaces\IHttpContext.cs" />
     <Compile Include="..\MvcMusicStore.Legacy\Interfaces\IIdentity.cs" Link="Interfaces\IIdentity.cs" />

@@ -13,12 +13,27 @@
         <ul id="navlist">
             <li class="first"><a href="@Url.Content("~")" id="current">Home</a></li>
             <li><a href="@Url.Content("~/Store/")">Store</a></li>
-            <li>@{Html.RenderAction("CartSummary", "ShoppingCart");}</li>
+            <li>
+            @{
+                #if NETCOREAPP
+                    <text>@await Component.InvokeAsync("CartSummary")</text>
+                #elif !NETCOREAPP
+                    @Html.RenderAction("CartSummary", "ShoppingCart");
+                #endif
+            }
+            </li>
             <li><a href="@Url.Content("~/StoreManager/")">Admin</a></li>
         </ul>        
     </div>
-
-    @{Html.RenderAction("GenreMenu", "Store");}
+    
+    
+    @{
+        #if NETCOREAPP
+            <text>@await Component.InvokeAsync("GenreMenu")</text>
+        #elif !NETCOREAPP
+            @Html.RenderAction("GenreMenu", "Store");
+        #endif
+    }
 
     <div id="main">
         @RenderBody()
