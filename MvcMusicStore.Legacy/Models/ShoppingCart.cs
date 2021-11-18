@@ -19,7 +19,6 @@ namespace MvcMusicStore.Models
             return cart;
         }
 
-
         public void AddToCart(Album album)
         {
             // Get the matching cart and album instances

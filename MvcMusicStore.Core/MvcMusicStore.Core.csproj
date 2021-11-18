@@ -1,42 +1,49 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\IISCrossover\IISCrossover.csproj" />
-  </ItemGroup>
+	<!-- Reuse the same cshtml razor view files by creating a link from the ASP.NET Core project -->
+	<ItemGroup>
+		<Content Include="..\MvcMusicStore.Legacy\Views\Shared\_Layout.cshtml" Link="Views\Shared\_Layout.cshtml" />
+		<Content Include="..\MvcMusicStore.Legacy\Views\ShoppingCart\Index.cshtml" Link="Views\ShoppingCart\Index.cshtml" />
+		<Content Include="..\MvcMusicStore.Legacy\Views\ShoppingCart\CartSummary.cshtml" Link="Views\Shared\Components\CartSummary\Default.cshtml" />
+		<Content Include="..\MvcMusicStore.Legacy\Views\Store\GenreMenu.cshtml" Link="Views\Shared\Components\GenreMenu\Default.cshtml" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="..\MvcMusicStore.Legacy\Views\Shared\_Layout.cshtml" Link="Views\Shared\_Layout.cshtml" />
-    <Content Include="..\MvcMusicStore.Legacy\Views\ShoppingCart\CartSummary.cshtml" Link="Views\Shared\Components\CartSummary\Default.cshtml" />
-    <Content Include="..\MvcMusicStore.Legacy\Views\Store\GenreMenu.cshtml" Link="Views\Shared\Components\GenreMenu\Default.cshtml" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Include="..\MvcMusicStore.Legacy\Controllers\ShoppingCartController.cs" Link="Controllers\ShoppingCartController.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Interfaces\IHttpContext.cs" Link="Interfaces\IHttpContext.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Interfaces\IIdentity.cs" Link="Interfaces\IIdentity.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Interfaces\IPrincipal.cs" Link="Interfaces\IPrincipal.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Interfaces\ISerializer.cs" Link="Interfaces\ISerializer.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Interfaces\ISession.cs" Link="Interfaces\ISession.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\AccountModels.cs" Link="Models\AccountModels.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\Album.cs" Link="Models\Album.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\Artist.cs" Link="Models\Artist.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\Cart.cs" Link="Models\Cart.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\Genre.cs" Link="Models\Genre.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\MusicStoreEntities.cs" Link="Models\MusicStoreEntities.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\Order.cs" Link="Models\Order.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\OrderDetail.cs" Link="Models\OrderDetail.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\SampleData.cs" Link="Models\SampleData.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\Models\ShoppingCart.cs" Link="Models\ShoppingCart.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\ViewModels\ShoppingCartRemoveViewModel.cs" Link="ViewModels\ShoppingCartRemoveViewModel.cs" />
-    <Compile Include="..\MvcMusicStore.Legacy\ViewModels\ShoppingCartViewModel.cs" Link="ViewModels\ShoppingCartViewModel.cs" />
-  </ItemGroup>
+	<!-- Reuse the same controller class for the ShoppingCartController by creating a link from the ASP.NET Core project -->
+	<ItemGroup>
+		<Compile Include="..\MvcMusicStore.Legacy\Controllers\ShoppingCartController.cs" Link="Controllers\ShoppingCartController.cs" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
-  </ItemGroup>
 
+	<!-- Reuse the same Interfaces for IHttpContext and web dependencies by creating a link from the ASP.NET Core project -->
+	<ItemGroup>
+		<!-- if you split these interfaces into distinct files then use those file names here instead of AspNetInterfaces.cs -->
+		<Compile Include="..\MvcMusicStore.Legacy\Interfaces\AspNetInterfaces.cs" Link="Interfaces\AspNetInterfaces.cs" />
+	</ItemGroup>
+
+	<!-- Reuse the same Models and ViewModels by creating a link from the ASP.NET Core project -->
+	<ItemGroup>
+		<Compile Include="..\MvcMusicStore.Legacy\Models\AccountModels.cs" Link="Models\AccountModels.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\Album.cs" Link="Models\Album.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\Artist.cs" Link="Models\Artist.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\Cart.cs" Link="Models\Cart.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\Genre.cs" Link="Models\Genre.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\MusicStoreEntities.cs" Link="Models\MusicStoreEntities.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\Order.cs" Link="Models\Order.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\OrderDetail.cs" Link="Models\OrderDetail.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\SampleData.cs" Link="Models\SampleData.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\Models\ShoppingCart.cs" Link="Models\ShoppingCart.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\ViewModels\ShoppingCartRemoveViewModel.cs" Link="ViewModels\ShoppingCartRemoveViewModel.cs" />
+		<Compile Include="..\MvcMusicStore.Legacy\ViewModels\ShoppingCartViewModel.cs" Link="ViewModels\ShoppingCartViewModel.cs" />
+	</ItemGroup>
+
+	<!-- we need to share the entities between projects by upgrading EF to a version that supports .NET Standard -->
+	<ItemGroup>
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+	</ItemGroup>
 </Project>

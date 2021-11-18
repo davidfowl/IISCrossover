@@ -10,13 +10,12 @@ namespace MvcMusicStore.Models
     {
 #if NETCOREAPP
         // TODO: Use constructor injection...
-        public MusicStoreEntities() : 
+        public MusicStoreEntities() :
             base(Startup.Configuration.GetConnectionString(nameof(MusicStoreEntities)))
         {
 
         }
 #endif
-
         public DbSet<Album> Albums { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Artist> Artists { get; set; }
