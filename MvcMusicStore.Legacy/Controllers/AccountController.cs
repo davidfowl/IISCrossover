@@ -1,18 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
+using Mvc3ToolsUpdateWeb_Default.Models;
+using MvcMusicStore;
 using MvcMusicStore.Models;
 
-namespace MvcMusicStore.Controllers
+namespace Mvc3ToolsUpdateWeb_Default.Controllers
 {
     public class AccountController : Controller
     {
-        private IHttpContext _httpContext = new HttpContextImpl();
+        private readonly IHttpContext _httpContext = new HttpContextImpl();
 
         private void MigrateShoppingCart(string UserName)
         {
             // Associate shopping cart items with logged-in user
-            var cart = ShoppingCart.GetCart(_httpContext);
+            var cart = ShoppingCart.GetCart(this._httpContext);
 
             cart.MigrateCart(UserName);
             Session[ShoppingCart.CartSessionKey] = UserName;
@@ -36,8 +42,8 @@ namespace MvcMusicStore.Controllers
             {
                 if (Membership.ValidateUser(model.UserName, model.Password))
                 {
-                    MigrateShoppingCart(model.UserName);
-
+                    MigrateShoppingCart(model.UserName); 
+                    
                     FormsAuthentication.SetAuthCookie(model.UserName, model.RememberMe);
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
@@ -95,11 +101,10 @@ namespace MvcMusicStore.Controllers
                     {
                         Roles.CreateRole("Administrator");
                     }
-
                     Roles.AddUserToRoles(model.UserName, new[] { "Administrator" });
 
-                    MigrateShoppingCart(model.UserName);
-
+                    MigrateShoppingCart(model.UserName); 
+                    
                     FormsAuthentication.SetAuthCookie(model.UserName, false /* createPersistentCookie */);
                     return RedirectToAction("Index", "Home");
                 }

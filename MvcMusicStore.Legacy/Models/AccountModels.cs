@@ -1,8 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+#if !NETCOREAPP
+using System.Web.Mvc;
+using System.Web.Security;
+#endif
 using CompareAttribute = System.ComponentModel.DataAnnotations.CompareAttribute;
 
-namespace MvcMusicStore.Models
+namespace Mvc3ToolsUpdateWeb_Default.Models
 {
 
     public class ChangePasswordModel

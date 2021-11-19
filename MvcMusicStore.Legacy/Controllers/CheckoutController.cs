@@ -8,9 +8,9 @@ namespace MvcMusicStore.Controllers
     [Authorize]
     public class CheckoutController : Controller
     {
+        private readonly IHttpContext _httpContext = new HttpContextImpl();
+        MusicStoreEntities storeDB = new MusicStoreEntities();
         const string PromoCode = "FREE";
-        private IHttpContext _httpContext = new HttpContextImpl();
-        private MusicStoreEntities storeDB = new MusicStoreEntities();
 
         //
         // GET: /Checkout/AddressAndPayment
@@ -46,7 +46,7 @@ namespace MvcMusicStore.Controllers
                     storeDB.SaveChanges();
 
                     //Process the order
-                    var cart = ShoppingCart.GetCart(_httpContext);
+                    var cart = ShoppingCart.GetCart(this._httpContext);
                     cart.CreateOrder(order);
 
                     return RedirectToAction("Complete",
