@@ -1,0 +1,103 @@
+<Project>
+  <PropertyGroup>
+    <DisableFastUpToDateCheck Condition="'$(BuildingInsideVisualStudio)' == 'true' ">true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="@(DeployProjectReference)">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <OutputItemType>_DeployedProjectOutput</OutputItemType>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+      <DeployName>$([System.IO.Path]::GetFileNameWithoutExtension(%(Identity)))</DeployName>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <Target Name="VerifyOnlyOneDeployedProject" BeforeTargets="AssignDeployedProjectTargetPaths">
+    <PropertyGroup>
+      <_IsInvalidValidDeployProjects>false</_IsInvalidValidDeployProjects>
+      <_HasDeployProject>true</_HasDeployProject>
+      <_HasDeployProject Condition=" '@(DeployProjectReference->Count())' == '0' " >false</_HasDeployProject>
+      <_HasOneDeployProject>false</_HasOneDeployProject>
+      <_HasOneDeployProject Condition=" '@(DeployProjectReference->Count())' == '1' " >true</_HasOneDeployProject>
+      <_IsInvalidValidDeployProjects Condition="!$(_HasDeployProject) AND !$(_HasOneDeployProject)">true</_IsInvalidValidDeployProjects>
+    </PropertyGroup>
+
+    <Error Condition="$(_IsInvalidValidDeployProjects)" Text="Only a single DeployProjectReference node is allowed per project" />
+  </Target>
+
+  <Target Name="AssignDeployedProjectTargetPaths" BeforeTargets="AddDeployedProjectsToWebConfig">
+    <ItemGroup>
+      <_DeployedProjectOutput Update="@(_DeployedProjectOutput)">
+        <TargetPath>projects\%(_DeployedProjectOutput.DeployName)\$([System.IO.Path]::GetFileName('%(Identity)'))</TargetPath>
+      </_DeployedProjectOutput>
+    </ItemGroup>
+
+    <MSBuild
+        Projects="@(_MSBuildDeployProjectReferenceExistent)"
+        Targets="PublishItemsOutputGroup"
+        BuildInParallel="$(BuildInParallel)"
+        Properties="%(_MSBuildDeployProjectReferenceExistent.SetConfiguration); %(_MSBuildDeployProjectReferenceExistent.SetPlatform); %(_MSBuildDeployProjectReferenceExistent.SetTargetFramework)"
+        Condition="'%(_MSBuildDeployProjectReferenceExistent.DeployName)' != '' "
+        ContinueOnError="$(ContinueOnError)"
+        SkipNonexistentTargets="true"
+        RemoveProperties="%(_MSBuildDeployProjectReferenceExistent.GlobalPropertiesToRemove)$(_GlobalPropertiesToRemoveFromProjectReferences)">
+
+      <Output TaskParameter="TargetOutputs" ItemName="_DeployedProjectsContents"/>
+    </MSBuild>
+
+    <ItemGroup>
+      <_AllDeployedProjectFilesContent Include="@(_DeployedProjectsContents)">
+        <TargetPath>projects\%(_DeployedProjectsContents.DeployName)\%(_DeployedProjectsContents.TargetPath)</TargetPath>
+      </_AllDeployedProjectFilesContent>
+      <_AllDeployedProjectFilesContent Include="@(_DeployedProjectOutput)" />
+      <Content Include="@(_AllDeployedProjectFilesContent)">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PrepareDeployProjectPaths" BeforeTargets="AddDeployedProjectsToWebConfig">
+    <PropertyGroup>
+      <__DeployedProjectTransformPath>$(IntermediateOutputPath)deployed_transform.xml</__DeployedProjectTransformPath>
+      <__WebConfigPath>web.config</__WebConfigPath>
+      <__IsPublishing>false</__IsPublishing>
+      <__IsPublishing Condition=" '$(PublishProfile)' != '' ">true</__IsPublishing>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_DeployProjectPaths Include="$(OutDir)%(_DeployedProjectOutput.TargetPath)">
+        <HostingModel>%(_DeployedProjectOutput.HostingModel)</HostingModel>
+        <ContentRoot>$([System.IO.Path]::GetDirectoryName(%(_DeployedProjectOutput.OriginalItemSpec)))</ContentRoot>
+        <TargetDirectory>$([System.IO.Path]::GetDirectoryName(%(_DeployedProjectOutput.TargetPath)))</TargetDirectory>
+      </_DeployProjectPaths>
+      <_DeployProjectPaths Condition="$(__IsPublishing)" Update="@(_DeployProjectPaths)">
+        <ContentRoot>%(TargetDirectory)</ContentRoot>
+      </_DeployProjectPaths>
+      <_DeployProjectPaths Update="@(_DeployedProjectOutput)" Condition=" '%(HostingModel)' == '' ">
+        <HostingModel>inprocess</HostingModel>
+      </_DeployProjectPaths>
+    </ItemGroup>
+
+    <Error Text="Unknown hosting model: %(_DeployProjectPaths.HostingModel)" Condition=" '%(_DeployProjectPaths.HostingModel)' != 'outofprocess' AND '%(_DeployProjectPaths.HostingModel)' != 'inprocess' " />
+  </Target>
+
+  <Target Name="AddDeployedProjectsToWebConfig" BeforeTargets="AssignTargetPaths">
+    <ItemGroup>
+      <__DeployedProjectTransformLines Include='&lt;configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform"&gt;' />
+      <__DeployedProjectTransformLines Include="&lt;system.webServer&gt;" />
+      <!-- In order to remove, we must have a node. So, we'll add one if it's not there and then remove it. If there were 'RemoveIfExists' we could just use that -->
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="InsertIfMissing" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore xdt:Transform="Remove" /&gt;' />
+      <__DeployedProjectTransformLines Include='&lt;aspNetCore processPath="dotnet" arguments="%(_DeployProjectPaths.Identity) --contentRoot %(_DeployProjectPaths.ContentRoot)" stdoutLogEnabled="true" stdoutLogFile=".\logs\stdout" hostingModel="%(_DeployProjectPaths.HostingModel)" xdt:Transform="Insert" /&gt;' />
+      <__DeployedProjectTransformLines Include="&lt;/system.webServer&gt;" />
+      <__DeployedProjectTransformLines Include="&lt;/configuration&gt;" />
+    </ItemGroup>
+
+    <WriteLinesToFile File="$(__DeployedProjectTransformPath)" Lines="@(__DeployedProjectTransformLines)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+
+    <TransformXml Source="$(__WebConfigPath)" Transform="$(__DeployedProjectTransformPath)" Destination="$(__WebConfigPath)" />
+  </Target>
+
+</Project>
